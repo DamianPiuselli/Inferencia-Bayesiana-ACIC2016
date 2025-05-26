@@ -17,7 +17,10 @@
 \maketitle
 
 \begin{abstract}
-En este informe presentamos la aplicación del modelo BART (Bayesian Additive Regression Trees) para la estimación de efectos de tratamiento en los datos del desafío ACIC 2016. Se describen los métodos utilizados, los resultados obtenidos y se comparan con los benchmarks del desafío.\end{abstract}
+En este informe presentamos la aplicación del modelo BART (Bayesian Additive Regression Trees) para la estimación de efectos de tratamiento en los datos del desafío ACIC 2016. Se describen los métodos utilizados, los resultados obtenidos y se comparan con los benchmarks del desafío.
+
+\noindent\textbf{Palabras clave:} BART, inferencia causal, efectos de tratamiento, ACIC 2016, árboles bayesianos
+\end{abstract}
 
 \section{Introducción}
 El desafío ACIC 2016 propone un conjunto de datos simulados para evaluar métodos de inferencia causal, en particular la estimación de efectos de tratamiento. En este trabajo, implementamos el modelo BART y analizamos su desempeño en comparación con los resultados reportados en la competencia.
@@ -27,7 +30,7 @@ El desafío ACIC 2016 propone un conjunto de datos simulados para evaluar métod
 BART es un modelo bayesiano no paramétrico basado en árboles de regresión aditivos, que permite capturar relaciones no lineales y complejas entre las covariables y el resultado. Utilizamos la implementación de \texttt{pymc-bart} en Python.
 
 \subsection{Datos}
-Se utilizaron los datos provistos por el desafío ACIC 2016, que incluyen matrices de covariables y resultados simulados bajo diferentes escenarios de tratamiento. Los archivos principales son \texttt{x.csv} y \texttt{zy\_5.csv}.
+Se utilizaron los datos provistos por el desafío ACIC 2016, que incluyen matrices de covariables y resultados simulados bajo diferentes escenarios de tratamiento.
 
 \subsection{Métricas de Evaluación}
 Las métricas consideradas incluyen el sesgo y el error cuadrático medio (RMSE) para el efecto promedio del tratamiento (SATE y ATT), la longitud del intervalo de credibilidad, la cobertura y el error de predicción individual (PEHE).
