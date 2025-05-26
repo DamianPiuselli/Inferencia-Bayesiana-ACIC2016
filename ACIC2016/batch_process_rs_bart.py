@@ -5,23 +5,29 @@ import pymc_bart as pmb
 import numpy as np
 import arviz as az
 
+# Get the directory where this script is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def save_metrics_to_csv(metrics, file_name="model_metrics.csv"):
+    file_path = os.path.join(SCRIPT_DIR, "..", file_name)  # Save to project root
+    
     # Check if the file exists
-    file_exists = os.path.isfile(file_name)
+    file_exists = os.path.isfile(file_path)
 
     # Convert metrics dictionary to a DataFrame
     metrics_df = pd.DataFrame([metrics])
 
     # Append to the CSV file
     if file_exists:
-        metrics_df.to_csv(file_name, mode="a", header=False, index=False)
+        metrics_df.to_csv(file_path, mode="a", header=False, index=False)
     else:
-        metrics_df.to_csv(file_name, mode="w", header=True, index=False)
+        metrics_df.to_csv(file_path, mode="w", header=True, index=False)
 
 
 def process_covariables():
-    X = pd.read_csv(r"ACIC2016\acic_challenge_2016\x.csv")
+    x_path = os.path.join(SCRIPT_DIR, "acic_challenge_2016", "x.csv")
+    X = pd.read_csv(x_path)
 
     categorical_cols = X.select_dtypes(include=["object"]).columns.tolist()
 
@@ -157,7 +163,7 @@ def process_csv_files(folder_path, skip_first_n=0):
 
 if __name__ == "__main__":
     # Define the folder containing the .csv files
-    y_folder_path = r"ACIC2016\sample_data_from_cf_all"
+    y_folder_path = os.path.join(SCRIPT_DIR, "sample_data_from_cf_all")
 
     X_encoded = process_covariables()
 

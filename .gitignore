@@ -175,3 +175,24 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# LaTeX cache and output files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.ps
+*.pdf
+*.tmp
+*.bak

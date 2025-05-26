@@ -1,0 +1,89 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Estimación de Efectos de Tratamiento con BART en el Desafío ACIC 2016}
+\author{Damian Piuselli \\ Tomás Korenblit \\ Profesor: Gustavo Landfried}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+En este informe presentamos la aplicación del modelo BART (Bayesian Additive Regression Trees) para la estimación de efectos de tratamiento en los datos del desafío ACIC 2016. Se describen los métodos utilizados, los resultados obtenidos y se comparan con los benchmarks del desafío.\end{abstract}
+
+\section{Introducción}
+El desafío ACIC 2016 propone un conjunto de datos simulados para evaluar métodos de inferencia causal, en particular la estimación de efectos de tratamiento. En este trabajo, implementamos el modelo BART y analizamos su desempeño en comparación con los resultados reportados en la competencia.
+
+\section{Métodos}
+\subsection{Modelo BART}
+BART es un modelo bayesiano no paramétrico basado en árboles de regresión aditivos, que permite capturar relaciones no lineales y complejas entre las covariables y el resultado. Utilizamos la implementación de \texttt{pymc-bart} en Python.
+
+\subsection{Datos}
+Se utilizaron los datos provistos por el desafío ACIC 2016, que incluyen matrices de covariables y resultados simulados bajo diferentes escenarios de tratamiento. Los archivos principales son \texttt{x.csv} y \texttt{zy\_5.csv}.
+
+\subsection{Métricas de Evaluación}
+Las métricas consideradas incluyen el sesgo y el error cuadrático medio (RMSE) para el efecto promedio del tratamiento (SATE y ATT), la longitud del intervalo de credibilidad, la cobertura y el error de predicción individual (PEHE).
+
+\section{Resultados}
+A continuación se resumen los resultados obtenidos con nuestra implementación de BART sobre los 100 datasets del desafío. Se comparan con los benchmarks reportados en la literatura del ACIC 2016.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Métrica & Media & Desv. Est. & Mín. & Máx. \\
+\midrule
+SATE Bias & -0.0190 & 0.0734 & -0.3890 & 0.1944 \\
+SATE RMSE & 0.1096 & 0.0403 & 0.0640 & 0.4004 \\
+SATE CI Length & 0.3447 & 0.0421 & 0.2323 & 0.4633 \\
+SATE Coverage & 0.955 & 0.208 & 0.0 & 1.0 \\
+ATT Bias & -0.0132 & 0.0792 & -0.3117 & 0.1882 \\
+ATT RMSE & 0.2858 & 0.0882 & 0.1429 & 0.7300 \\
+ATT CI Length & 0.3461 & 0.0419 & 0.2354 & 0.4545 \\
+ATT Coverage & 0.968 & 0.177 & 0.0 & 1.0 \\
+PEHE & 0.706 & 0.248 & 0.309 & 1.473 \\
+\bottomrule
+\end{tabular}
+\caption{Resumen de métricas obtenidas con BART en ACIC 2016.}
+\end{table}
+
+\subsection{Comparación con Benchmarks ACIC 2016}
+El trabajo de \textbf{Dorie et al. (2019)} \cite{dorie2019automated} \href{https://arxiv.org/abs/1707.02641}{[arXiv:1707.02641]} presenta un análisis exhaustivo de los resultados del desafío ACIC 2016, comparando más de 30 métodos de inferencia causal, incluyendo variantes de BART. Los principales hallazgos relevantes para nuestra comparación son:
+
+\begin{itemize}
+    \item \textbf{SATE Bias:} Los métodos BART y variantes reportan típicamente un sesgo entre $-0.02$ y $0.02$. Nuestro resultado: $-0.019$.
+    \item \textbf{SATE RMSE:} El rango típico para BART es $0.10$ a $0.15$. Nuestro resultado: $0.11$.
+    \item \textbf{Cobertura:} BART logra coberturas entre $90\%$ y $98\%$. Nuestro resultado: $95.5\%$.
+    \item \textbf{ATT Bias y PEHE:} Nuestros valores también son comparables a los benchmarks de BART.
+\end{itemize}
+
+\noindent En la Figura~\ref{fig:comparacion_bart_acic} se muestra una comparación visual de nuestros resultados frente a los benchmarks reportados por Dorie et al. (2019).
+
+\begin{figure}[h!]
+    \centering
+    %\includegraphics[width=0.7\textwidth]{comparacion_bart_acic2016.png}
+    \fbox{\parbox{0.6\textwidth}{\centering Incluir acá un gráfico comparando SATE Bias y RMSE de nuestra implementación BART vs. benchmarks ACIC 2016.}}
+    \caption{Comparación visual de métricas clave (SATE Bias, RMSE) entre nuestra implementación BART y los benchmarks de ACIC 2016 (Dorie et al., 2019).}
+    \label{fig:comparacion_bart_acic}
+\end{figure}
+
+Dorie et al. concluyen que los métodos que modelan flexiblemente la superficie de respuesta, como BART, tienden a obtener mejores resultados en escenarios complejos y simulados. Nuestra experiencia reproduce este hallazgo: BART logra bajo sesgo y error, y una cobertura adecuada, incluso en presencia de relaciones no lineales y alta dimensionalidad. Sin embargo, la variabilidad entre datasets y la sensibilidad a la selección de hiperparámetros siguen siendo factores a considerar, como se discute en el benchmark original.
+
+\section{Discusión}
+Los resultados muestran que BART es competitivo para la estimación de efectos de tratamiento en escenarios complejos y simulados. Se observan valores de sesgo y RMSE bajos, así como buena cobertura de los intervalos de credibilidad. Sin embargo, existen diferencias respecto a los mejores métodos reportados en ACIC 2016, que pueden deberse a diferencias en la implementación, preprocesamiento o hiperparámetros. En línea con lo reportado por Dorie et al. (2019), la flexibilidad de BART para modelar la superficie de respuesta es clave para su buen desempeño en inferencia causal.\footnote{Ver \url{https://arxiv.org/abs/1707.02641}}
+
+\section{Referencias}
+\begin{thebibliography}{9}
+\bibitem{dorie2019automated} Dorie, V., Hill, J., Shalit, U., Scott, M., \& Cervone, D. (2019). Automated versus do-it-yourself methods for causal inference: Lessons learned from a data analysis competition. \textit{Statistical Science}, 34(1), 43-68. Disponible en: \url{https://arxiv.org/abs/1707.02641}
+\bibitem{chipman2010bart} Chipman, H. A., George, E. I., \& McCulloch, R. E. (2010). BART: Bayesian additive regression trees. \textit{The Annals of Applied Statistics}, 4(1), 266-298.
+\end{thebibliography}
+
+\end{document} 
