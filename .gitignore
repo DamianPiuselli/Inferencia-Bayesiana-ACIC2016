@@ -196,3 +196,7 @@ cython_debug/
 *.pdf
 *.tmp
 *.bak
+
+
+# Misc
+**/.DS_Store
