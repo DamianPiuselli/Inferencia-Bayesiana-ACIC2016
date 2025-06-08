@@ -4,11 +4,11 @@
 \usepackage{amsmath, amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{geometry}
+\usepackage{hyperref}
 \geometry{margin=1in}
 
-\title{Estimación de Efectos de Tratamiento con BART en la competencia ACIC 2016}
+\title{Estimación de efectos de tratamiento con BART en la competencia ACIC 2016}
 \author{Damian Piuselli \\ Tomás Korenblit \\ Profesor: Gustavo Landfried}
 \date{\today}
 
@@ -23,11 +23,20 @@ En este informe presentamos la aplicación del modelo BART (Bayesian Additive Re
 \end{abstract}
 
 \section{Introducción}
-La competncia ACIC 2016 propone un conjunto de datos simulados para evaluar métodos de inferencia causal, en particular la estimación de efectos de tratamiento. En este trabajo, implementamos el modelo BART y analizamos su desempeño en comparación con los resultados reportados en la competencia.
+La competencia ACIC 2016 propone un conjunto de datos simulados para evaluar métodos de inferencia causal, en particular la estimación de efectos de tratamiento. En este trabajo, implementamos el modelo BART y analizamos su desempeño en comparación con los resultados reportados en la competencia.
 
 \section{Métodos}
 \subsection{Modelo BART}
 BART es un modelo bayesiano no paramétrico basado en árboles de regresión aditivos, que permite capturar relaciones no lineales y complejas entre las covariables y el resultado. Utilizamos la implementación de \texttt{pymc-bart} en Python.
+
+\subsection{Modelando la superficie de respuesta:}
+La respuesta $Y_i$ depende una superficie de respuesta desconocida $f$ de las variables $X_i$ y $Z_i$ y un error aleatorio $\epsilon_i$:
+
+\[ Y_i = f(X_i, Z_i) + \epsilon_i \]
+
+La superficie de respuesta es modelada con BART.
+
+En principio no tenemos mucha información, asumimos que $\epsilon_i$ tiene distribucion normal con media cero y desvío estándar $\sigma$ con una distribucion InverseGamma(1,2).
 
 \subsection{Datos}
 Se utilizaron los datos provistos por la competencia ACIC 2016, que incluyen matrices de covariables y resultados simulados bajo diferentes escenarios de tratamiento.
@@ -62,7 +71,7 @@ PEHE & 0.706 & 0.248 & 0.309 & 1.473 \\
 El trabajo de \textbf{Dorie et al. (2019)} \cite{dorie2019automated} \href{https://arxiv.org/abs/1707.02641}{[arXiv:1707.02641]} presenta un análisis exhaustivo de los resultados de la competencia ACIC 2016, comparando más de 30 métodos de inferencia causal, incluyendo variantes de BART. Los principales hallazgos relevantes para nuestra comparación son:
 
 \begin{itemize}
-    \item \textbf{SATE Bias:} Los métodos BART y variantes reportan típicamente un sesgo entre $-0.02$ y $0.02$. Nuestro resultado: $-0.019$.
+    \item \textbf{SATE Bias:} métodos BART típicamente entre $-0.02$ y $0.02$ \cite{dorie2019automated}. Nuestro resultado: $-0.019$.
     \item \textbf{SATE RMSE:} El rango típico para BART es $0.10$ a $0.15$. Nuestro resultado: $0.11$.
     \item \textbf{Cobertura:} BART logra coberturas entre $90\%$ y $98\%$. Nuestro resultado: $95.5\%$.
     \item \textbf{ATT Bias y PEHE:} Nuestros valores también son comparables a los benchmarks de BART.
